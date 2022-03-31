@@ -86,6 +86,7 @@ async def on_reaction_add(reaction, user):
         
         
 @bot.command(name='list', description='узнать кол-во игроков на сервере', help='узнать кол-во игроков на сервере', aliases=['l','online'])
+@commands.has_guild_permissions(administrator=True)
 async def list(ctx):
 
     # global message
