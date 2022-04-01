@@ -18,7 +18,7 @@ port = config['main']['port']
 footer = config['main']['footer']
 
 labels = ['00:00']
-data = []
+data = [0]
 
 @bot.event
 async def on_ready():
@@ -37,9 +37,14 @@ async def on_reaction_add(reaction, user):
             status = server.status()
 
             global data,labels
-            if(len(data) >= 10 or len(labels) >= 10):
-                data = []
-                labels = ['00:00']
+            if(len(data) > 3 or len(labels) > 3):
+                for i in range(1,len(labels)):
+                    data[i-1] = data[i]
+                for i in range(1,len(labels)):
+                    labels[i-1] = labels[i]
+
+                data.extend([status.players_online])
+                labels.extend([current_time])
 
 
             time = int(current_time.split(':')[1]) - int(labels[len(labels) - 1].split(':')[1])
@@ -67,7 +72,7 @@ async def on_reaction_add(reaction, user):
 
                 new_embed = discord.Embed(title=f"{title_name}", colour=0x00e600)
                 new_embed.add_field(name="Server Name :", value=f"{name}", inline=False)
-                new_embed.add_field(name="Direct Connect :", value=f"{ip}:{port}", inline=True)
+                new_embed.add_field(name="Direct Connect :", value=f"`{ip}:{port}`", inline=True)
                 new_embed.add_field(name="Game :", value=f"Bebrock", inline=True)
                 new_embed.add_field(name="Map :", value=f"{status.map}", inline=True)
                 new_embed.add_field(name="Status :", value=f"✅ Online", inline=True)
